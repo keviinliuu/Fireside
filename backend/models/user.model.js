@@ -13,6 +13,11 @@ const userSchema = new Schema({
         type: String,
         required: true
     },
+    username: {
+        type: String,
+        required: true,
+        unique: true
+    },
     email: {
         type: String,
         required: true,
@@ -25,6 +30,7 @@ const userSchema = new Schema({
 }, {
     timestamps: true
 })
+
 
 userSchema.plugin(passportLocalMongoose);
 
@@ -47,6 +53,7 @@ userSchema.pre('save', function (next)  {
     })
 });
 
+/*
 userSchema.methods.comparePassword = function (candidatePassword, callback) {
     bcrypt.compare(candidatePassword, this.password, (err, isMatch) => {
       if (err) {
@@ -55,6 +62,7 @@ userSchema.methods.comparePassword = function (candidatePassword, callback) {
       callback(null, isMatch);
     });
   };
+*/
 
 const User = mongoose.model('User', userSchema);
 

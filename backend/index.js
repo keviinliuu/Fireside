@@ -1,12 +1,17 @@
-// import mongodb from "mongodb";
-import app from "./server.js";
-import dotenv from "dotenv";
-import mongoose from "mongoose";
+const express = require('express');
+const cors = require('cors');
+const mongoose = require('mongoose');
+const dotenv = require('dotenv');
 
 dotenv.config();
 
+const app = express();
 const port = process.env.PORT || 4000;
 const uri = process.env.FIRESIDE_DB_URI;
+
+app.use(express.urlencoded({ extended: true }));
+app.use(cors());
+app.use(express.json());
 
 mongoose.connect(uri, { 
     useNewUrlParser: true, 
@@ -25,3 +30,8 @@ const connection = mongoose.connection;
 connection.once('open', () => {
     console.log("MongoDB database connection established succesfully");
 })
+
+const usersRouter = require('./api/signup.route');
+
+app.post('/signup', usersRouter);
+app.use("*", (req, res) => res.status(404).json({ error: "Oops. Looks like you took a wrong turn somewhere!"}));
