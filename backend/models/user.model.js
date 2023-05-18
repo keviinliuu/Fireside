@@ -1,6 +1,9 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
 const passportLocalMongoose = require('passport-local-mongoose');
+const jwt = require('jsonwebtoken');
+const Joi = require('joi');
+const passwordComplexity = require('joi-password-complexity');
 
 const Schema = mongoose.Schema;
 
@@ -31,7 +34,6 @@ const userSchema = new Schema({
     timestamps: true
 })
 
-
 userSchema.plugin(passportLocalMongoose);
 
 userSchema.pre('save', function (next)  {
@@ -53,6 +55,35 @@ userSchema.pre('save', function (next)  {
     })
 });
 
+userSchema.methods.generateAuthToken = function() {
+    const token = jwt.sign({_id: this._id}, process.env.JWTPRIVATEKEY, {expiresIn: "7d"});
+    return token;
+}
+
+const User = mongoose.model('User', userSchema);
+
+const validate = (data) => {
+    const schema = Joi.object({
+        firstname: Joi.string().required().label("First Name"),
+        lastname: Joi.string().required().label("Last Name"),
+        email: Joi.string().required().label("Email"),
+        password: passwordComplexity({
+            min: 8,
+            max: 20,
+            lowerCase: 1,
+            upperCase: 1,
+            numeric: 1,
+            symbol: 1,
+            requirementCount: 4
+        }).required().label("Password")
+    });
+    return schema.validate(data);
+}
+
+module.exports = {User, validate};
+
+
+
 /*
 userSchema.methods.comparePassword = function (candidatePassword, callback) {
     bcrypt.compare(candidatePassword, this.password, (err, isMatch) => {
@@ -63,7 +94,3 @@ userSchema.methods.comparePassword = function (candidatePassword, callback) {
     });
   };
 */
-
-const User = mongoose.model('User', userSchema);
-
-module.exports = User;

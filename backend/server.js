@@ -31,7 +31,9 @@ connection.once('open', () => {
     console.log("MongoDB database connection established succesfully");
 })
 
-const usersRouter = require('./api/signup.route');
+const usersRouter = require('./routes/signup');
+const authRouter = require('./routes/auth');
 
 app.post('/signup', usersRouter);
+app.post('/login', authRouter);
 app.use("*", (req, res) => res.status(404).json({ error: "Oops. Looks like you took a wrong turn somewhere!"}));
