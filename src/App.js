@@ -8,12 +8,15 @@ import Signup from './components/Signup';
 function App() {
   const user = localStorage.getItem("token");
   return (
-    <Routes>
-      {user && <Route path="/" exact element={<Main />} /> }
-      <Route path="signup" exact element={<Signup />} />
-      <Route path="login" exact element={<Login />} />
-      <Route path="/" exact element={<Navigate replace to="/login" />} />
-    </Routes>
+    <Router>
+      <Routes>
+        {user && <Route path="/" element={<Home />} /> }
+        <Route path="signup" element={<Signup />} />
+        <Route path="login" element={<Login />} />
+        <Route path="/" element={<Navigate replace to="/login" />} />
+      </Routes>
+    </Router>
+    
   )
 }
 

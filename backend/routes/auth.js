@@ -3,7 +3,7 @@ const { User } = require("../models/user.model");
 const Joi = require("joi");
 const bcrypt = require("bcrypt");
 
-router.route("/login").post(async (req, res) => {
+router.route("/").post(async (req, res) => {
     try {
         const { error } = validate(req.body);
         if (error) {

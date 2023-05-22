@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const {User, validate} = require('../models/user.model');
 
-router.route('/signup').post(async (req, res) => {
+router.route('/').post(async (req, res) => {
     try {
         const { error } = validate(req.body);
         if(error) {

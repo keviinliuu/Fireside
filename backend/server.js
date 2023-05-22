@@ -34,6 +34,6 @@ connection.once('open', () => {
 const usersRouter = require('./routes/signup');
 const authRouter = require('./routes/auth');
 
-app.post('/signup', usersRouter);
-app.post('/login', authRouter);
+app.use('/api/users', usersRouter);
+app.post('/api/auth', authRouter);
 app.use("*", (req, res) => res.status(404).json({ error: "Oops. Looks like you took a wrong turn somewhere!"}));
